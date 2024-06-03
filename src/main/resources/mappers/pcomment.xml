@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<!-- product.xml -->
+
+<mapper namespace="pcomment">
+	
+	<insert id="insert" parameterType="kr.co.myshop.comment.CommentDTO">
+		INSERT INTO pcomment(cno, product_code, content, wname)
+		VALUES (pcomment_seq.nextval, #{product_code}, #{content}, #{wname})
+	</insert>
+	
+	<select id="list" parameterType="Integer" resultType="kr.co.myshop.comment.CommentDTO">
+		SELECT cno, product_code, content, wname, regdate
+		FROM pcomment
+		WHERE product_code = #{product_code}
+		ORDER BY regdate
+	</select>
+	
+	<update id="update" parameterType="kr.co.myshop.comment.CommentDTO">
+		UPDATE pcomment
+		SET content = #{content}
+		WHERE cno = #{cno}
+	</update>
+	
+	<delete id="delete" parameterType="Integer">
+		DELETE FROM pcomment 
+		WHERE cno = #{cno}
+	</delete>
+	
+	<!-- 댓글 수를 가져오는 쿼리 추가 -->
+    <select id="count" resultType="java.math.BigDecimal" parameterType="int">
+        SELECT COUNT(*) 
+        FROM pcomment
+        WHERE product_code = #{product_code}
+    </select>
+	
+	<update id="updateproc" parameterType="kr.co.myshop.comment.CommentDTO">
+		UPDATE pcomment
+		SET content = #{content}
+		WHERE cno = #{cno}
+	</update>
+</mapper>

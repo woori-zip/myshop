@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<!-- order.xml -->
+
+<mapper namespace="order">
+
+    <select id="totalamount" resultType="Integer" parameterType="String">
+    	SELECT SUM(price*qty)
+    	FROM cart
+    	WHERE id=#{s_id}
+    </select>
+    
+    <select id="orderno" parameterType="String" resultType="String">
+        SELECT NVL(MAX(orderno),'1')
+    	FROM orderlist
+    	WHERE orderno LIKE #{cdate} || '%'
+    </select>
+    
+    <insert id="orderlistInsert" parameterType="kr.co.myshop.order.OrderDTO">
+    	INSERT INTO orderlist(orderno, id, totalamount, payment, deliverynm, deliveryaddr, deliverymsg, ordercheck)
+    	VALUES (#{orderno},#{id},#{totalamount},#{payment},#{deliverynm},#{deliveryaddr},#{deliverymsg},'I')
+    </insert>
+    
+    <!-- cart테이블에 있는 행을 orderdetail 테이블에 추가하기 -->
+    <insert id="orderdetailInsert" parameterType="java.util.HashMap">
+			INSERT INTO orderdetail (ono, orderno, product_code, qty, price)
+			SELECT orderdetail_seq.nextval, #{orderno}, product_code, qty, price
+			FROM cart
+			WHERE id=#{s_id}
+    </insert>
+    
+    <delete id="cartDelete" parameterType="String">
+    	DELETE FROM cart
+    	WHERE id=#{s_id}
+    </delete>
+    
+    <select id="orderDesc" parameterType="String" resultType="java.util.HashMap">
+		SELECT AA.*, PD.product_name
+		FROM(
+		    SELECT ol.orderno, ol.id, ol.totalamount, ol.payment, ol.deliverynm, 
+		           ol.deliverymsg, ol.deliveryaddr, ol.ordercheck, 
+		           TO_CHAR(ol.orderdate, 'YYYY-MM-DD AMHH24:MI:SS') as orderdate, 
+		           od.product_code, od.qty, od.price, (od.qty * od.price) as amount
+		    FROM orderlist ol INNER JOIN orderdetail od 
+		    ON ol.orderno = od.orderno
+		    ) AA INNER JOIN product PD
+		ON AA.product_code = PD.product_code
+		WHERE AA.orderno = #{orderno}
+    </select>
+</mapper> 

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<!-- cart.xml -->
+
+<mapper namespace="cart">
+
+    <insert id="insert" parameterType="kr.co.myshop.cart.CartDTO">
+    	INSERT INTO cart(cartno, product_code, price, qty, id)
+		VALUES (cart_seq.nextval, #{product_code}, #{price}, #{qty}, #{id})
+    </insert>
+    
+
+	<select id="list" resultType="kr.co.myshop.cart.CartDTO" parameterType="String">
+        SELECT cartno, product_code, price, qty, id, regdate 
+        FROM cart 
+        WHERE id = #{id}
+        ORDER BY cartno
+    </select>
+    
+    
+    <delete id="delete" parameterType="java.util.HashMap">
+    	DELETE FROM cart
+    	WHERE cartno = #{no} AND id = #{s_id} 
+    </delete>
+    
+    
+	<select id="list2" resultType="java.util.HashMap" parameterType="String">
+		SELECT cart.cartno, cart.product_code, cart.price, cart.qty, cart.id, cart.regdate, product.product_name
+		FROM cart INNER JOIN product
+		ON cart.product_code = product.product_code
+        WHERE cart.id = #{id}
+        ORDER BY cart.regdate
+    </select>
+
+        
+</mapper> 

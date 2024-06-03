@@ -1,0 +1,30 @@
+--product_sql.txt
+
+--상품 테이블 생성
+create table product (
+    product_code number         primary key      --상품번호
+   ,product_name varchar2(255)  not null         --상품명
+   ,description  varchar2(2000)                  --상품내용
+   ,price        number         default 0        --상품가격
+   ,filename     varchar2(255)                   --파일명
+   ,filesize     number         default 0        --파일크기
+   ,regdate      date           default sysdate  --작성일
+);
+
+--상품번호 시퀀스 생성
+create sequence product_seq;
+
+※ product 테이블은 DTO를 이용하지 않고 Map을 사용해서 전송하는 것으로 테스트합니다!
+
+
+--maira db
+
+CREATE TABLE product (
+    product_code INT PRIMARY KEY AUTO_INCREMENT,  
+    product_name VARCHAR(255) NOT NULL,           
+    description VARCHAR(2000),                    
+    price DECIMAL(10, 2) DEFAULT 0,               
+    filename VARCHAR(255),                        
+    filesize INT DEFAULT 0,                       
+    regdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP   
+);

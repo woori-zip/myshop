@@ -1,0 +1,39 @@
+-- cart_sql.txt
+
+-- 장바구니 테이블
+create table cart (
+    cartno       number      primary key     --장바구니 번호
+   ,product_code number      not null        --상품코드
+   ,price        number      not null        --상품가격
+   ,qty          number      default 0       --상품수량
+   ,id           varchar(15) not null        --아이디
+   ,regdate      date        default sysdate --작성일
+);
+
+
+-- 장바구니 번호 시퀀스 생성
+create sequence cart_seq;
+
+
+-- 장바구니 삭제
+delete from cart where cartno=? and id=?
+
+
+※ /cart/list.jsp에서 상품코드 대신에 상품제목으로 출력하시오
+
+select cart.cartno, cart.product_code, cart.price, cart.qty, cart.id, cart.regdate, product.product_name
+from cart inner join product
+on cart.product_code = product.product_code
+
+
+
+
+
+
+
+
+
+
+
+
+

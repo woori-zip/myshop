@@ -1,0 +1,70 @@
+-- order_sql.txt
+
+-- 주문서
+create table orderlist (
+    orderno      char(15)      primary key      --주문서번호
+   ,id           varchar(15)   not null         --아이디
+   ,totalamount  number                         --총결제금액
+   ,payment      varchar(10)   not null         --결제구분 (cash,card등)
+   ,deliverynm   varchar(100)  not null         --받는사람
+   ,deliveryaddr varchar(2000) not null         --받는주소
+   ,deliverymsg  varchar(2000)                  --배송메세지
+   ,ordercheck   char(1)       not null         --결과상태(Y:배송완료, C:주문취소, I:진행중)
+   ,orderdate    date          default sysdate  --주문일
+);
+
+
+-- 주문서 번호 생성 : orderno
+-- 년월일시분초 날짜데이터를 활용해서 구성한다
+-- 예) 202405271707131  <-----2024년5월27일17시7분13초에 최초 주문서 번호
+      202405271707132  <----- max(주문서번호) + 1
+      202405271707133
+
+select max(orderno)
+from orderlist
+where orderno like '20240527170713%';
+
+select nvl(max(orderno), '1')
+from orderlist
+where orderno like '20240527170713%';
+
+
+-- 총결제금액 : totalamount
+select sum(price*qty) 
+from cart
+where id='itwill';
+
+////////////////////////////////////////////////////////////////////////////////////
+
+-- 주문 상세 내역
+create table orderdetail (
+    ono          number   primary key  --번호
+   ,orderno      char(15) not null     --주문번호
+   ,product_code number   not null     --상품코드
+   ,qty          number   not null     --수량
+   ,price        number   not null     --가격
+);
+
+--주문 상세 내역 시퀀스 생성
+create sequence orderdetail_seq;
+
+--cart테이블 (장바구니) 에 있는 상품 조회하기
+select product_code, qty, price, id
+from cart
+where id='itwill';
+
+--cart테이블에 있는 주문상품을 orderdetail 테이블에 옮겨 담기
+insert into orderdetail (ono, orderno, product_code, qty, price)
+			select orderdetail_seq.nextval, '20240528',product_code, qty, price
+			from cart
+			where id='itwill';
+			
+		
+////////////////////////////////////////////////////////////////////////////////////
+
+--주문서번호가 일치하는 정보는 orderlist 와 orderdetail 테이블을 조인해서 가져오기
+--예) 202405292
+
+select *
+from orderlist l inner join orderdetail d
+on l.orderno = d.orderno

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<!-- product.xml -->
+
+<mapper namespace="product">
+	<insert id="insert" parameterType="java.util.Map">
+		INSERT INTO product(product_code, product_name, description, price, filename, filesize)
+		VALUES(product_seq.nextval, #{product_name}, #{description}, #{price}, #{filename}, #{filesize})
+	</insert>
+	
+	<!-- mariaDB 
+		INSERT INTO product(product_name, description, price, filename, filesize)
+		VALUES(#{product_name}, #{description}, #{price}, #{filename}, #{filesize});
+	-->
+	
+	<select id="list" resultType="java.util.Map">
+		SELECT product_code, product_name, description, price, filename, filesize
+		FROM product
+		ORDER BY regdate DESC
+	</select>
+	
+	
+	<select id="search" resultType="java.util.Map" parameterType="String">
+		SELECT product_code, product_name, description, price, filename, filesize
+		FROM product
+		WHERE product_name LIKE #{keyword}
+		ORDER BY regdate DESC
+	</select>
+	
+	<select id="detail" resultType="java.util.Map" parameterType="int">
+		SELECT product_code, product_name, description, price, filename, filesize
+		FROM product
+		WHERE product_code = #{product_code}
+	</select>
+	
+	<update id="update" parameterType="java.util.Map">
+		UPDATE product
+		SET product_name = #{product_name}
+			, price =  #{price}
+			, description =  #{description}
+			, filename =  #{filename}
+			, filesize = #{filesize}
+		WHERE product_code = #{product_code}
+	</update>
+	
+	<select id="filename" resultType="String" parameterType="Integer">
+		SELECT filename
+		FROM product
+		WHERE product_code = #{product_code}
+	</select>
+	
+	<delete id="delete" parameterType="Integer">
+		DELETE FROM product
+		WHERE product_code=#{product_code}
+	</delete>
+	
+</mapper>

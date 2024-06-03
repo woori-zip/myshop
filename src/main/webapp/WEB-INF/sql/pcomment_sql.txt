@@ -1,0 +1,28 @@
+-- pcomment_sql.txt
+
+-- 상품 댓글 테이블
+create table pcomment (
+     cno          number         primary key           --댓글번호
+    ,product_code number         not null              --부모글번호
+    ,content      varchar2(255)  not null              --댓글내용
+    ,wname        varchar2(100)  not null              --작성자
+    ,regdate      date           default   sysdate     --작성일
+);
+
+-- 댓글 시퀀스
+create sequence pcomment_seq;
+
+-- 댓글 목록
+select * from pcomment where product_code = 부모글번호
+
+-- MARIA DB
+
+-- 상품 댓글 테이블
+CREATE TABLE pcomment (
+     cno INT AUTO_INCREMENT PRIMARY KEY,       
+     product_code INT NOT NULL,                  
+     content VARCHAR(255) NOT NULL,                  
+     wname VARCHAR(100) NOT NULL,                 
+     regdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP       
+);
+

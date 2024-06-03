@@ -1,0 +1,43 @@
+@charset "UTF-8";
+
+/* main.css */
+
+a:link    {color: black; text-decoration: none;}
+a:visited {color: black; text-decoration: none;}
+a:hover   {color: black; text-decoration: underline;}
+a:active  {color: black; text-decoration: none;}
+
+.btn-white {
+    background-color: white;
+    box-shadow: 0px 0px 9px -1px rgba(0,0,0,0.10);
+}
+
+.btn-white:hover{
+    background-color: #BED7DC;
+    color: white;
+}
+
+.bg-default {
+    background-color: #BED7DC;
+}
+
+.commentArea{
+	height: 80px;
+    text-align: left;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.10);   
+    margin: 10px; 
+}s
+
+.commentInfo{
+	font-size: 15px;
+	color: gray;
+}
+
+.font-orange{
+	color: orange;
+	font-weight: bold; 
+}
+
+
